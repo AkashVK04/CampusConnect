@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.campusconnect.backend.dto.LoginRequest;
 import com.campusconnect.backend.dto.LoginResponse;
+import com.campusconnect.backend.security.JwtUtil;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +19,9 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+private JwtUtil jwtUtil;
+
     @PostMapping("/login")
 public LoginResponse login(@RequestBody LoginRequest request) {
 
@@ -25,14 +29,20 @@ public LoginResponse login(@RequestBody LoginRequest request) {
             .orElse(null);
 
     if (user == null) {
-        return new LoginResponse("User not found");
+        return new LoginResponse("User not found", null);
     }
 
     if (!user.getPassword().equals(request.getPassword())) {
-        return new LoginResponse("Invalid password");
+        return new LoginResponse("Invalid password", null);
     }
 
-    return new LoginResponse("Login Successful");
+    String token =
+            jwtUtil.generateToken(user.getEmail());
+
+    return new LoginResponse(
+            "Login Successful",
+            token
+    );
 }
     
 
