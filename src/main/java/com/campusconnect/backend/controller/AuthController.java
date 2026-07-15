@@ -11,10 +11,11 @@ import com.campusconnect.backend.dto.LoginResponse;
 import com.campusconnect.backend.security.JwtUtil;
 
 import java.time.LocalDateTime;
-
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
 
     @Autowired
     private UserRepository userRepository;
